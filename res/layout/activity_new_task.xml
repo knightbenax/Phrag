@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingBottom="20dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="20dp"
+    tools:context=".NewTaskActivity" >
+
+    <com.ephod.phrag.CustomEditText
+        android:id="@+id/editText1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:ems="10"
+        android:gravity="top"
+        android:textSize="20sp"
+        android:inputType="text|textMultiLine"
+        android:saveEnabled="true"
+        android:background="#00000000"
+        android:hint="@string/new_task_hint" >
+
+        <requestFocus />
+    </com.ephod.phrag.CustomEditText>
+
+</RelativeLayout>

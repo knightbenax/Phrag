@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ephod.phrag"
+    android:installLocation="internalOnly"
+    android:versionCode="1"
+    android:versionName="1.7" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.SET_WALLPAPER"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
+    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>"
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"></uses-permission>  
+      
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:logo="@drawable/ic_launcher"
+        android:theme="@style/CustomActionBarTheme">
+
+        <!-- AppTheme -->
+        <activity
+            android:name="com.ephod.phrag.MainActivity"
+            android:label="@string/app_name"
+             >
+        </activity>
+        <activity
+            android:name="com.ephod.phrag.HomeActivity"
+            android:label="@string/app_name"
+            android:theme="@style/CustomActionBarTheme"
+            android:logo="@drawable/actionbaricon">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.ephod.phrag.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:theme="@style/CustomActionBarTheme"
+            android:logo="@drawable/actionbaricon" >
+        </activity>
+        <activity
+            android:name="com.ephod.phrag.LoadingActivity"
+            android:label="@string/title_activity_loading"
+            android:theme="@style/CustomActionBarTheme"
+            android:logo="@drawable/actionbaricon" >
+        </activity>
+        <activity
+            android:name="com.ephod.phrag.NewTaskActivity"
+            android:label="@string/title_activity_new_task"
+            android:theme="@style/CustomActionBarTheme"
+            android:logo="@drawable/actionbaricon" >
+        </activity>
+        <service android:name="com.ephod.phrag.NotificationService">
+            <!--<intent-filter android:name="com.ephod.phrag.NotificationService"></intent-filter>-->
+        </service>
+        
+        <receiver android:name="com.ephod.phrag.MyBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE"></action>"
+            </intent-filter>
+        </receiver>
+        
+        <receiver android:name="com.ephod.phrag.MyAlarmReceiver"></receiver>"
+        
+    </application>
+
+</manifest>
