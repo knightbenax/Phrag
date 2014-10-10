@@ -1,16 +1,21 @@
 package com.ephod.phrag;
 
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.graphics.Color;
+import android.graphics.drawable.TransitionDrawable;
 import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 public class EnhancedListAdapter extends BaseAdapter {
@@ -18,48 +23,55 @@ public class EnhancedListAdapter extends BaseAdapter {
 	Activity bleh;
 	
 	TasksDatabaseHelper taskNigga; 
+	//TagsDatabaseHelper tagNigga; 
 	
 	public EnhancedListAdapter(Activity bleh){
 		this.bleh = bleh;
 		taskNigga = new TasksDatabaseHelper(bleh);
+		//tagNigga = new TagsDatabaseHelper(bleh);
 	}
 	
-	private List<String> mItems = new ArrayList<String>();
-	private List<String> mItemsId = new ArrayList<String>();
+	private List<Task> mItems = new LinkedList<Task>();
+	private List<Tag> mTags = new LinkedList<Tag>();
 
     void resetItems() {
         mItems.clear();
-        mItemsId.clear();
-        taskNigga.getAllTasks(mItems, mItemsId);
+        mTags.clear();
+        mTags = taskNigga.getAllTags();
+        
+        if (mTags.isEmpty()){
+        	taskNigga.PutTagInTheDb("Chore", "#5c1212");
+        	taskNigga.PutTagInTheDb("Side Projects", "#0a5aad");
+        }    
+        
+        mItems = taskNigga.getAllTasks();
         if (mItems.isEmpty()){
-        	//for(int i = 1; i <= 20; i++) {
-                //mItems.add("Test item in the yard containing two rows of data or what not" + i);
-                //mItemsId.add(String.valueOf(i));
-            //}
         	Calendar today = Calendar.getInstance();
-        	String DateAsString  = today.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.US) + " " + today.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US) + " " +today.getDisplayName(Calendar.YEAR, Calendar.SHORT, Locale.US);
-        	taskNigga.PutStuffInTheDb("FUCK Damisi. This is a test task. Phrag it by swiping the task left or right", DateAsString);
-        	taskNigga.getAllTasks(mItems, mItemsId);
+        	String DateAsString  = today.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.US) + ", " + String.valueOf(today.get(Calendar.DAY_OF_MONTH)) + " " + today.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US) + " " + String.valueOf(today.get(Calendar.YEAR)); 
+        	taskNigga.PutStuffInTheDb("This is a test task. Swipe the task left to reveal more", DateAsString, "Chore", "1");
         }
-        notifyDataSetChanged();
+        
+        //AlertDialog.Builder alert = new AlertDialog.Builder(bleh);
+	    //alert.setTitle(taskNigga.getTaskCount());
+	    //alert.show();
+        //Log.d("Mushy II", String.valueOf(taskNigga.getTaskCount()));
+        mItems = taskNigga.getAllTasks();
+        //notifyDataSetChanged();
     }
 
     public void remove(int position) {
-        mItems.remove(position);//remove the physical view from the list
-        String TaskId  = mItemsId.get(position);
-        mItemsId.remove(position);
-        
+    	String TaskId = mItems.get(position).id;
+        mItems.remove(position);//remove the physical view from the list  
+        notifyDataSetChanged();
         taskNigga.deleteTask(TaskId);
         //delete the task by id here
-        notifyDataSetChanged();
+        
     }
 
-    public void insert(int position, String item, String id) {
-        mItems.add(position, item);
-        mItemsId.add(position, id);
-        Calendar today = Calendar.getInstance();
-        String DateAsString  = today.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.US) + " " + today.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US) + " " +today.getDisplayName(Calendar.YEAR, Calendar.SHORT, Locale.US);
-        taskNigga.PutStuffInTheDb(item, DateAsString);// add the item back, the one that was deleted
+    public void insert(int position, String item, String id, String date, String tag, String finished) {
+    	Task task = new Task(id, item, date, tag, finished);
+        mItems.add(position, task);
+        taskNigga.PutStuffInTheDb(item, date, tag, finished);// add the item back, the one that was deleted
         //add the item back to the database
         notifyDataSetChanged();
     }
@@ -86,10 +98,6 @@ public class EnhancedListAdapter extends BaseAdapter {
         return mItems.get(position);
     }
     
-    public String getId(int position) { //get the id of the Task that was deleted
-        return mItemsId.get(position);
-    }
-
     /**
      * Get the row id associated with the specified position in the list.
      *
@@ -120,8 +128,8 @@ public class EnhancedListAdapter extends BaseAdapter {
      * @return A View corresponding to the data at the specified position.
      */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final ViewHolder holder;
         //if(convertView == null) {
             convertView = bleh.getLayoutInflater().inflate(R.layout.listview_each_item, parent, false);
             // Clicking the delete icon, will read the position of the item stored in
@@ -137,8 +145,70 @@ public class EnhancedListAdapter extends BaseAdapter {
 
             holder = new ViewHolder();
             assert convertView != null;
-            holder.mTextView = (CustomTextView) convertView.findViewById(R.id.tasksbody);
+            /*final Animation animFadeinout = AnimationUtils.loadAnimation(bleh, R.anim.fadeout);
+            
+            final TransitionDrawable transition = (TransitionDrawable) convertView.findViewById(R.id.listviewoga).getBackground();
+            final LinearLayout listviewsecondoga = (LinearLayout)convertView.findViewById(R.id.listviewsecondoga);
+            
+            convertView.findViewById(R.id.listviewoga).setOnLongClickListener(new OnLongClickListener(){
 
+				@Override
+				public boolean onLongClick(View arg0) {
+					// TODO Auto-generated method stub
+					
+					listviewsecondoga.startAnimation(animFadeinout);
+				
+					//listviewsecondoga.setAlpha(0.0f);
+			        transition.startTransition(300);
+			        
+					return false;
+				}
+            	
+            });*/
+            
+            holder.mTextView = (CustomTextView) convertView.findViewById(R.id.tasksbody);
+            holder.mTextDate = (CustomTextView) convertView.findViewById(R.id.tasksdate);
+            holder.mTagColor = (LinearLayout) convertView.findViewById(R.id.tagcolor);
+            holder.mArcView = (ProgressArcView) convertView.findViewById(R.id.taskpercentage);
+            holder.deleteButton = (ImageButton)convertView.findViewById(R.id.deletebutton);
+            holder.markButton = (ImageButton)convertView.findViewById(R.id.markbutton);
+
+            final View Viewu = convertView;
+            
+            holder.deleteButton.setOnClickListener(new View.OnClickListener(){
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					HomeActivity newbleh = (HomeActivity)bleh;
+					View childView = newbleh.mListView.getChildAt(position - newbleh.mListView.getFirstVisiblePosition());				
+					newbleh.mListView.touchListener.myGenerateDismissAnimate(Viewu, true, true, position, EnhancedListAdapter.this, childView);
+				}
+            	
+            });
+            
+            holder.markButton.setOnClickListener(new View.OnClickListener(){
+
+				@Override
+				public void onClick(View v) {
+										// TODO Auto-generated method stub
+					float arcPercent = holder.mArcView.arcPercent;
+					//while(arcPercent < 100){
+						//holder.mArcView.arcPercent = holder.mArcView.arcPercent + 0.02f;
+						//arcPercent = holder.mArcView.arcPercent;
+						holder.mArcView.animated = true;
+						holder.mArcView.invalidate();
+					//}
+					//for(float i = arcPercent; i < 100; i++){
+						taskNigga.updateSingleTaskFinished(mItems.get(position).id, "0"); //update the finishing in the database
+					//}
+						//AlertDialog.Builder alert = new AlertDialog.Builder(bleh);
+					    //alert.setTitle("Guy");
+					    //alert.show();
+				}
+            	
+            });
+            
             convertView.setTag(holder);
             //convertView.setLayoutParams(new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)); //reset the height of the list iew item after it had gotten used
     	//} else {
@@ -146,14 +216,29 @@ public class EnhancedListAdapter extends BaseAdapter {
         //}
 
         holder.position = position;
-        holder.mTextView.setText(mItems.get(position));
+        holder.mTextView.setText(mItems.get(position).content);
+        holder.mTextDate.setText(mItems.get(position).date);
+        if (mItems.get(position).finished.equals("0")){
+        	holder.mArcView.finishedValue = "yes";
+        	holder.markButton.setVisibility(View.GONE);
+        }
+        String currentTag = mItems.get(position).tag;
+        String currentTagColor = "";
+        currentTagColor = taskNigga.getSingleTagColor(currentTag);
+        //Log.d("Mushy II", "Color" + taskNigga.getTagCount() + currentTag);
+        holder.mTagColor.setBackgroundColor(Color.parseColor(currentTagColor));
 
         return convertView;
     }
 
     private class ViewHolder {
     	CustomTextView mTextView;
-        int position;
+    	CustomTextView mTextDate;
+    	ImageButton deleteButton;
+    	ImageButton markButton;
+    	LinearLayout mTagColor;
+    	ProgressArcView mArcView;
+    	int position;
     }
 	
 }

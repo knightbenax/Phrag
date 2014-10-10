@@ -1,8 +1,10 @@
 package com.ephod.phrag;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,15 +12,16 @@ import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
-public class MyAlarmReceiver extends BroadcastReceiver {
+@SuppressLint("NewApi") public class MyAlarmReceiver extends BroadcastReceiver {
 
 	int taskscount = 0;
 	private int mId = 101856;
 	TasksDatabaseHelper helper;
-	private List<String> mItems = new ArrayList<String>();
-	private List<String> mItemsId = new ArrayList<String>();
+	private List<Task> mItems = new LinkedList<Task>();
+
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -28,7 +31,7 @@ public class MyAlarmReceiver extends BroadcastReceiver {
 		//context.startService(service);
 		helper = new TasksDatabaseHelper(context);
 		taskscount = helper.getTaskCount(); //Get the number of tasks available
-		helper.getAllTasks(mItems, mItemsId);
+		mItems = helper.getAllTasks();
 		showNotifications(context);
 	}
 	
@@ -46,6 +49,7 @@ public class MyAlarmReceiver extends BroadcastReceiver {
 		        new NotificationCompat.Builder(context)
 		        .setSmallIcon(R.drawable.ic_notification)
 		        .setContentTitle("Phrag")
+		        .setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.getsintheway))
 		        //.setVibrate(new long[]{300, 300})
 		        .setDefaults(Notification.DEFAULT_VIBRATE)
 		        .setOnlyAlertOnce(true)
@@ -58,7 +62,7 @@ public class MyAlarmReceiver extends BroadcastReceiver {
 		inboxStyle.setSummaryText("Keep Calm And Phrag Stuff");
 		//add tasks into the big view
 		for (int i=0; i < taskscount - 1; i++){
-			inboxStyle.addLine((CharSequence) mItems.get(i)); //add the individual tasks to the big view
+			inboxStyle.addLine((CharSequence) mItems.get(i).content); //add the individual tasks to the big view
 		}
 		
 		mBuilder.setStyle(inboxStyle);

@@ -9,6 +9,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.TransitionDrawable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,10 +22,11 @@ import com.ephod.phrag.EnhancedListView.SwipeDirection;
 
 public class HomeActivity extends Activity {
 	
-	private EnhancedListAdapter mAdapter;
-    private EnhancedListView mListView;
+	//private EnhancedListAdapter mAdapter;
+    //private EnhancedListView mListView;
     
-    
+    private EnhancedListAdapter mAdapter;
+    public SwipeListView mListView;  
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +35,13 @@ public class HomeActivity extends Activity {
 		setContentView(R.layout.activity_home);
 		
 		mAdapter = new EnhancedListAdapter(this);
-		mListView = (EnhancedListView)findViewById(R.id.HomeListView);
+		mListView = (SwipeListView)findViewById(R.id.new_lv_list);
+		
         mAdapter.resetItems();
         mListView.setAdapter(mAdapter);
-        
+        //mListView.
 		setActionBarFont();
-		setUpSwiping();
+		//setUpSwiping();
 		
 		//startService(new Intent(this, NotificationService.class));
 		setRepeatingAlarm();
@@ -73,13 +76,22 @@ public class HomeActivity extends Activity {
 			case R.id.action_about:
 				showAboutPage();
 				return true;
-			case R.id.action_settings:
+			case R.id.action_addtask:
 				showAddTaskPage();
 				finish();
-				return true;				
+				return true;
+			case R.id.action_tags:
+				showTags();
+				finish();
 			default:
 				return super.onOptionsItemSelected(item);
 		}				
+	}
+	
+
+	public void showTags(){
+		Intent intent = new Intent(this, TagsActivity.class);
+		startActivity(intent);
 	}
 	
 	public void showAboutPage(){
@@ -116,7 +128,7 @@ public class HomeActivity extends Activity {
 	
 	
 	
-	public void setUpSwiping(){		
+	/*public void setUpSwiping(){		
         
         mListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
         	//play sound
@@ -129,19 +141,21 @@ public class HomeActivity extends Activity {
              * @param position The position of the item to delete from your adapter.
              * @return An {@link de.timroes.android.listview.EnhancedListView.Undoable}, if you want
              *      to give the user the possibility to undo the deletion.
-             */
+             *
         	
         	
             @Override
             public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
-                final String item = (String) mAdapter.getItem(position); 
-                final String id = (String) mAdapter.getId(position);
+                final String item = (String) ((Task) mAdapter.getItem(position)).content; 
+                final String id = (String) ((Task) mAdapter.getItem(position)).id;
+                final String date = (String) ((Task) mAdapter.getItem(position)).date;
+                final String tag = (String) ((Task) mAdapter.getItem(position)).tag;
                 mAdapter.remove(position);
                 return new EnhancedListView.Undoable() {
                     @Override
                     public void undo() {
-                        mAdapter.insert(position, item, id);
+                        mAdapter.insert(position, item, id, date, tag);
                     }
                     
                     @Override 
@@ -158,13 +172,17 @@ public class HomeActivity extends Activity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), "Clicked on item " + mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "You need to freaking do this task, so you can Phrag it. My friend, get to work!!", Toast.LENGTH_LONG).show();
             }
         });
+        
+        
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), "Long clicked on item " + mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
+            	
+            	
+                //Toast.makeText(getApplicationContext(), "You need to freaking do this task, so you can Phrag it. My friend, get to work!!", Toast.LENGTH_LONG).show(); //Long clicked on item " + mAdapter.getItem(position)
                 return true;
             }
         });
@@ -174,6 +192,6 @@ public class HomeActivity extends Activity {
 		mListView.setSwipeDirection(SwipeDirection.BOTH);
 		//mListView.setSmoothScrollbarEnabled(true);
         
-	}
+	}*/
 
 }

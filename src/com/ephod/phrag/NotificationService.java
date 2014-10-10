@@ -1,10 +1,10 @@
 package com.ephod.phrag;
 
 
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,7 +17,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 
-public class NotificationService extends Service {
+@SuppressLint("NewApi") public class NotificationService extends Service {
 
 	/*Want this to show the notifications for the number of tasks we still have to Phrag*/
 	
@@ -28,8 +28,7 @@ public class NotificationService extends Service {
 	int taskscount = 0;
 	private int mId = 101856;
 	TasksDatabaseHelper helper = new TasksDatabaseHelper(this);
-	private List<String> mItems = new ArrayList<String>();
-	private List<String> mItemsId = new ArrayList<String>();
+	private List<Task> mItems = new LinkedList<Task>();
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -44,7 +43,7 @@ public class NotificationService extends Service {
 		
 		//run the showing of the task instead
 		taskscount = helper.getTaskCount(); //Get the number of tasks available
-		helper.getAllTasks(mItems, mItemsId);
+		mItems = helper.getAllTasks();
 		
 		if (taskscount > 0){
 			showNotifications(); //if we have at least one task. Show this	
@@ -70,7 +69,7 @@ public class NotificationService extends Service {
 				wakelock.acquire();
 				//show notification here
 				taskscount = helper.getTaskCount(); //Get the number of tasks available
-				helper.getAllTasks(mItems, mItemsId);
+				mItems = helper.getAllTasks();
 				
 				if (taskscount > 0){
 					showNotifications(); //if we have at least one task. Show this	
