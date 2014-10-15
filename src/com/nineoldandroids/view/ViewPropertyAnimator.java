@@ -19,6 +19,7 @@ package com.nineoldandroids.view;
 import java.util.WeakHashMap;
 import android.os.Build;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import com.nineoldandroids.animation.Animator;
 
