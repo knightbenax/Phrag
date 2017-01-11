@@ -4,49 +4,56 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+ <LinearLayout android:orientation="vertical"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+     <android.support.design.widget.AppBarLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:id="@+id/toolbarparent"
+         android:theme="@style/AppTheme.AppBarOverlay">
 
-    </android.support.design.widget.AppBarLayout>
-    
-<LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="match_parent"
-    android:layout_alignParentTop="true"
-    android:layout_marginBottom="45dp"
-    android:orientation="vertical" >
+         <android.support.v7.widget.Toolbar
+             android:id="@+id/toolbar"
+             android:layout_width="match_parent"
+             android:layout_height="?attr/actionBarSize"
+             android:background="?attr/colorPrimary"
+             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    <com.ephod.phrag.CustomEditText
-        android:id="@+id/phragdetails"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="#00000000"
-        android:ems="10"
-        android:gravity="top"
-        android:hint="@string/new_task_hint"
-        android:inputType="text|textMultiLine"
-        android:paddingBottom="20dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="20dp"
-        android:saveEnabled="true"
-        android:textSize="20sp" >
+     </android.support.design.widget.AppBarLayout>
 
-        <!-- <requestFocus /> -->
-    </com.ephod.phrag.CustomEditText>
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:layout_marginBottom="45dp"
+         android:orientation="vertical" >
 
-    
+         <com.ephod.phrag.CustomEditText
+             android:id="@+id/phragdetails"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent"
+             android:background="#00000000"
+             android:ems="10"
+             android:gravity="top"
+             android:hint="@string/new_task_hint"
+             android:inputType="text|textMultiLine"
+             android:paddingBottom="20dp"
+             android:paddingLeft="15dp"
+             android:paddingRight="15dp"
+             android:paddingTop="20dp"
+             android:saveEnabled="true"
+             android:textSize="20sp" >
 
-</LinearLayout>
+             <!-- <requestFocus /> -->
+         </com.ephod.phrag.CustomEditText>
+
+
+
+     </LinearLayout>
+
+
+ </LinearLayout>
 
 <LinearLayout
     android:id="@+id/bottomcontrols"

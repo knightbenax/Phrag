@@ -12,7 +12,7 @@ public class AboutActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
-		getSupportActionBar().hide();
+		//getSupportActionBar().hide();
 		
 		WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
     	getWindow().setFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER, WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
