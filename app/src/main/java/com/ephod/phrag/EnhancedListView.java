@@ -377,7 +377,7 @@ public class EnhancedListView extends ListView {
            mUndoPopupTextView = (TextView)undoView.findViewById(R.id.text);
 
            mUndoPopup = new PopupWindow(undoView);
-           mUndoPopup.setAnimationStyle(R.style.fade_animation);
+           //mUndoPopup.setAnimationStyle(R.style.fade_animation);
 
            mScreenDensity = getResources().getDisplayMetrics().density;
            mUndoPopup.setHeight((int)(mScreenDensity * 50)); //height of the undo bar. was 56, changed to 46. Ashefor Bezaleel 2013. 18th December 2013 - 6:44am

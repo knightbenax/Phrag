@@ -1,13 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.ephod.phrag"
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 26
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -19,12 +20,7 @@ android {
 }
 
 dependencies {
-    compile files('libs/android-support-v4.jar')
-
-    compile 'com.android.support:design:25.0.1'
-
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:support-v4:25.0.1'
-
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:appcompat-v7:26.1.0'
     compile files('libs/annotations.jar')
 }

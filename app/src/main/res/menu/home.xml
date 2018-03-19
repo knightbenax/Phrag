@@ -1,11 +1,15 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
+    <!--<item
         android:id="@+id/action_addtask"
         android:orderInCategory="100"
-        android:showAsAction="always"
-        android:title="@string/action_addtask" android:icon="@drawable/ic_action_new"/>
-    <item android:id="@+id/action_tags" android:showAsAction="never" android:title="@string/action_tagsmenu" android:orderInCategory="101"></item><item android:id="@+id/action_about" android:title="@string/action_about" android:showAsAction="never" android:orderInCategory="102"></item>
+        app:showAsAction="always"
+        android:title="@string/action_addtask" android:icon="@drawable/ic_action_new"/>-->
+
+    <item android:id="@+id/action_tags" app:showAsAction="always" android:title="@string/action_tagsmenu" android:orderInCategory="101"></item>
+
+    <item android:id="@+id/action_about" android:title="@string/action_about" app:showAsAction="always" android:orderInCategory="102"></item>
     
 
 </menu>

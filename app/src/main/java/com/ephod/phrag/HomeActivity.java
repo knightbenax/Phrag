@@ -1,19 +1,15 @@
 package com.ephod.phrag;
 
-import java.util.Calendar;
-
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
-import android.os.Bundle;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.TransitionDrawable;
-import android.support.v7.app.ActionBarActivity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
@@ -21,12 +17,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.TextView;
-import com.ephod.phrag.EnhancedListView;
-import com.ephod.phrag.EnhancedListView.SwipeDirection;
+
+import java.util.Calendar;
 
 public class HomeActivity extends AppCompatActivity {
 	
@@ -44,7 +39,7 @@ public class HomeActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_home);
 		
 		mAdapter = new EnhancedListAdapter(this);
-		mListView = (SwipeListView)findViewById(R.id.new_lv_list);
+		mListView = findViewById(R.id.new_lv_list);
 		
         mAdapter.resetItems();
         mListView.setAdapter(mAdapter);
@@ -65,12 +60,40 @@ public class HomeActivity extends AppCompatActivity {
 			tintManager.setStatusBarTintDrawable(topbar);
         }
 
+		FloatingActionButton thisFab = findViewById(R.id.fab_button);
 
+        settingStatusBarTransparent();
 		//startService(new Intent(this, NotificationService.class));
 		setRepeatingAlarm();
 	}
 
-    public void setNewActionBarFont(){
+	private void settingStatusBarTransparent() {
+
+		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+			Window w = getWindow(); // in Activity's onCreate() for instance
+			//w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+			getWindow().getDecorView().setSystemUiVisibility(
+					View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+							| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+			w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+			w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+		}
+
+		//Apparently, Android for some weird reason ignores all xml values for styles when you set only one programmatically
+		//Screw you, Google!
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			//getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccentDark));
+			//getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+			getWindow().getDecorView().setSystemUiVisibility(
+					View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+							| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+			getWindow().setStatusBarColor(getResources().getColor(R.color.primary));
+			//setStatusBarTranslucent(true);
+		}
+	}
+
+
+	public void setNewActionBarFont(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.new_toolbar);
         toolbar.setTitle("Phrag");
         //toolbar.setElevation(4);
@@ -107,10 +130,10 @@ public class HomeActivity extends AppCompatActivity {
 			case R.id.action_about:
 				showAboutPage();
 				return true;
-			case R.id.action_addtask:
-				showAddTaskPage();
-				finish();
-				return true;
+			//case R.id.action_addtask:
+				//showAddTaskPage();
+				//finish();
+				//return true;
 			case R.id.action_tags:
 				showTags();
 				finish();
@@ -134,6 +157,8 @@ public class HomeActivity extends AppCompatActivity {
 		Intent intent = new Intent(this, NewTaskActivity.class);
 		startActivity(intent);
 	}
+
+
 	
 	public void setActionBarFont(){
 		//SpannableString s = new SpannableString("Phrag");		

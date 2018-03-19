@@ -46,7 +46,7 @@ import android.support.v4.app.NotificationCompat;
 		mItems = helper.getAllTasks();
 		
 		if (taskscount > 0){
-			showNotifications(); //if we have at least one task. Show this	
+			showNotifications(); //if we have at least one task. Show th is
 		}
 		return Service.START_STICKY;
 	}
