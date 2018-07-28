@@ -153,7 +153,7 @@ public class HomeActivity extends AppCompatActivity {
 		startActivity(intent);
 	}
 	
-	public void showAddTaskPage(){
+	public void showAddTaskPage(View view){
 		Intent intent = new Intent(this, NewTaskActivity.class);
 		startActivity(intent);
 	}

@@ -5,9 +5,7 @@
     android:versionCode="2"
     android:versionName="2.0" >
 
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="17" />
+
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
@@ -15,7 +13,10 @@
     </uses-permission>
     <uses-permission android:name="android.permission.VIBRATE" >
     </uses-permission>
-"
+    <uses-permission android:name="android.permission.READ_SMS"></uses-permission>
+    <uses-permission android:name="android.permission.SEND_SMS"></uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_SMS"></uses-permission>
 
 
 
@@ -58,6 +59,16 @@
             android:logo="@drawable/actionbaricon"
             android:theme="@style/PhragAppTheme"
             android:windowSoftInputMode="adjustResize" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SENDTO" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
+                <data android:scheme="mms" />
+                <data android:scheme="mmsto" />
+            </intent-filter>
         </activity>
 
         <service android:name="com.ephod.phrag.NotificationService" >
@@ -71,14 +82,10 @@
                 </action>
                 <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE" >
                 </action>
-"
-
-
             </intent-filter>
         </receiver>
         <receiver android:name="com.ephod.phrag.MyAlarmReceiver" >
         </receiver>
-"
 
 
         <activity
@@ -96,6 +103,38 @@
             android:name="com.ephod.phrag.SingleTaskActivity"
             android:label="@string/title_activity_single_task" >
         </activity>
+
+
+        <!-- BroadcastReceiver that listens for incoming SMS messages -->
+        <receiver android:name=".SmsReceiver"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_DELIVER" />
+            </intent-filter>
+        </receiver>
+
+        <!-- BroadcastReceiver that listens for incoming MMS messages -->
+        <receiver android:name=".MmsReceiver"
+            android:permission="android.permission.BROADCAST_WAP_PUSH">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
+                <data android:mimeType="application/vnd.wap.mms-message" />
+            </intent-filter>
+        </receiver>
+
+
+        <service android:name=".HeadlessSmsSendService"
+            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
+                <data android:scheme="mms" />
+                <data android:scheme="mmsto" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
